@@ -1,0 +1,43 @@
+#{{ ansible_managed }}
+upstream old-site {
+    server 127.0.0.1:{{ item.old_inst_port }};
+    #server 127.0.0.1:5001;
+}
+
+# old_inst_name: "testold"
+# old_inst_port: "5000"
+# reset_db: "no"
+
+server {
+    listen 80;
+
+    # optional ssl configuration
+
+    #listen 443 ssl;
+    #ssl_certificate /path/to/ssl/pem_file;
+    #ssl_certificate_key /path/to/ssl/certificate_key;
+
+    # end of optional ssl configuration
+
+    server_name  _;
+
+    access_log  /home/vagrant/oldapps/{{ item.old_inst_name }}/access.log;
+
+
+    location / {
+        proxy_set_header        Host $http_host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+
+        client_max_body_size    10m;
+        client_body_buffer_size 128k;
+        proxy_connect_timeout   60s;
+        proxy_send_timeout      90s;
+        proxy_read_timeout      90s;
+        proxy_buffering         off;
+        proxy_temp_file_write_size 64k;
+        proxy_pass http://old-site;
+        proxy_redirect          off;
+    }
+}

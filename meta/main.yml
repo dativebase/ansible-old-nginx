@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: "Joel Dunham"
+  company: "Joel Dunham"
+  license: BSD
+  min_ansible_version: 2.0
+  platforms:
+   - name: EL
+     versions:
+      - 7
+   - name: Ubuntu
+     versions:
+      - precise
+      - trusty
+  categories:
+   - web
+dependencies: []
+  
